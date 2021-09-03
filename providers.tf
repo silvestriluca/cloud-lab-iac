@@ -11,11 +11,13 @@ terraform {
 provider "aws" {
   region = "eu-west-1"
   default_tags {
-    environment       = "lab"
-    service           = "baseline-infrastructure"
-    stage             = "seed"
-    repository        = "github/cloud-lab-iac"
-    tf-state-location = "local"
+    tags = {
+      environment       = "lab"
+      service           = "baseline-infrastructure"
+      stage             = "seed"
+      repository        = "github/cloud-lab-iac"
+      tf-state-location = "local"
+    }
   }
 }
 

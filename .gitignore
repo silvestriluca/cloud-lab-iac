@@ -27,3 +27,15 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
+
+# Ignored vscode files
+.vscode/
+
+# Zip
+*.zip
+
+# Mac related
+*.DS_Store
+
+# Private/draft folder
+private/

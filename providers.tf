@@ -17,6 +17,7 @@ provider "aws" {
       stage             = "seed"
       repository        = "github/cloud-lab-iac"
       tf-state-location = "local"
+      tf-workspace      = terraform.workspace
     }
   }
 }

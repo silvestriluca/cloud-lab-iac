@@ -19,4 +19,6 @@ module "s3_remote_state" {
   iam_role_name_prefix             = "tf-rstate-repl-role-baseline"
 
   kms_key_description = "The key used to encrypt the remote state bucket - baseline."
+
+  tags = local.global_tags
 }

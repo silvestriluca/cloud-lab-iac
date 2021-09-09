@@ -8,12 +8,12 @@ output "tf-workspace" {
   description = "TF workspace where state is persisted"
 }
 
-output "state-bucket" {
+output "state-bucket-name" {
   value       = module.s3_remote_state.state_bucket.bucket
   description = "The S3 bucket name to store the remote state file"
 }
 
-output "state-bucket-replica" {
+output "state-bucket-replica-name" {
   value       = module.s3_remote_state.replica_bucket.bucket
   description = "The S3 bucket name to replicate the state S3 bucket"
 }

@@ -23,7 +23,33 @@ module "s3_remote_state" {
   tags = local.global_tags
 }
 
+############# KMS #############
 resource "aws_kms_alias" "state_bucket_key" {
   name          = "alias/bucket-tf-rstate-bl-${terraform.workspace}"
   target_key_id = module.s3_remote_state.kms_key.id
+}
+
+############# SSM PARAMETER STORE #############
+resource "aws_ssm_parameter" "state_bucket" {
+  name      = "baseline/${terraform.workspace}/state-bucket-name"
+  value     = module.s3_remote_state.state_bucket.bucket
+  type      = "SecureString"
+  overwrite = true
+  tags      = local.global_tags
+}
+
+resource "aws_ssm_parameter" "state_bucket_replica" {
+  name      = "baseline/${terraform.workspace}/state-bucket-replica-name"
+  value     = module.s3_remote_state.replica_bucket.bucket
+  type      = "SecureString"
+  overwrite = true
+  tags      = local.global_tags
+}
+
+resource "aws_ssm_parameter" "state_bucket_kms_id" {
+  name      = "baseline/${terraform.workspace}/state-bucket-kms-id"
+  value     = module.s3_remote_state.replica_bucket.bucket
+  type      = "SecureString"
+  overwrite = true
+  tags      = local.global_tags
 }

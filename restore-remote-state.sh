@@ -1,4 +1,3 @@
-
 read -p "This script will restore REMOTE state. Are you sure? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]

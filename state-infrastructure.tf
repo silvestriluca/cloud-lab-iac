@@ -1,3 +1,8 @@
+locals {
+  state_locking_table = "tf-rstate-lock-bl-${terraform.workspace}"
+}
+
+
 module "s3_remote_state" {
   source = "nozaq/remote-state-s3-backend/aws"
 
@@ -6,7 +11,7 @@ module "s3_remote_state" {
     aws.replica = aws.replica
   }
 
-  dynamodb_table_name            = "tf-rstate-lock-bl-${terraform.workspace}"
+  dynamodb_table_name            = local.state_locking_table
   s3_bucket_force_destroy        = true
   state_bucket_prefix            = "tf-rstate-bl-${terraform.workspace}-"
   replica_bucket_prefix          = "tf-rstate-replica-bl-${terraform.workspace}-"
@@ -48,8 +53,24 @@ resource "aws_ssm_parameter" "state_bucket_replica" {
 
 resource "aws_ssm_parameter" "state_bucket_kms_id" {
   name      = "/baseline/${terraform.workspace}/state-bucket-kms-id"
-  value     = module.s3_remote_state.replica_bucket.bucket
+  value     = module.s3_remote_state.kms_key.id
   type      = "SecureString"
   overwrite = true
   tags      = local.global_tags
 }
+
+resource "aws_ssm_parameter" "tf_backend_config" {
+  name      = "/baseline/${terraform.workspace}/tf-backend-config"
+  value     = <<-EOT
+    bucket          = "${module.s3_remote_state.state_bucket.bucket}"
+    key             = "baseline-terraform.tfstate"
+    region          = "${data.aws_region.current.name}"
+    encrypt         = true
+    kms_key_id      = "${module.s3_remote_state.kms_key.id}"
+    dynamodb_table  = "${local.state_locking_table}"
+    EOT
+  type      = "SecureString"
+  overwrite = true
+  tags      = local.global_tags
+}
+

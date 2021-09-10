@@ -28,6 +28,9 @@ override.tf.json
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
 
+# Ignore terraform.lock.hcl (locked provider version choices)
+.terraform.lock.hcl
+
 # Ignored vscode files
 .vscode/
 

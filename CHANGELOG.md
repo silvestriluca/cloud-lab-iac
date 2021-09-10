@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Basic tagging structure
 - TF outputs
 - SSM Parameter store entries for remote state infrastructure
+- Remote state support
+- Management scripts
 
 ## [0.1.0] - 2021-09-03
 ### Added

@@ -16,7 +16,7 @@ provider "aws" {
       service           = "baseline-infrastructure"
       stage             = "seed"
       repository        = "github/cloud-lab-iac"
-      tf-state-location = "local"
+      tf-state-location = local.state_location
       tf-workspace      = terraform.workspace
     }
   }

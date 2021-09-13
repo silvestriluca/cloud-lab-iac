@@ -22,3 +22,8 @@ output "state-bucket-kms-id" {
   value       = module.s3_remote_state.kms_key.id
   description = "The KMS customer master key ID to encrypt state buckets"
 }
+
+output "state-location" {
+  value       = local.state_location
+  description = "Whether the state is saved on local or remote backend. Values are [\"remote\", \"local\"]"
+}

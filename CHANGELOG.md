@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Automated state location awarness
 - CI/CD pipeline in AWS
+- S3 bucket for CI/CD artifacti
+- IAM roles & policies for Codepipeline
 
 ### Changed
 - Substituted variables for app in prefix/verbose context

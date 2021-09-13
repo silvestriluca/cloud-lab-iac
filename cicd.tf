@@ -1,8 +1,8 @@
-/*
 ################## IAM POLICIES/ROLES ##################
 
 resource "aws_iam_role" "codepipeline_role" {
-  name = "test-role"
+  name_prefix = "codepipeline-role-${var.app_name_prefix}-${terraform.workspace}-"
+  description = "Role for ${var.app_name_verbose}-${terraform.workspace} Pipeline"
 
   assume_role_policy = <<EOF
 {
@@ -18,11 +18,13 @@ resource "aws_iam_role" "codepipeline_role" {
   ]
 }
 EOF
+
+  tags = local.global_tags
 }
 
 resource "aws_iam_role_policy" "codepipeline_policy" {
-  name = "codepipeline_policy"
-  role = aws_iam_role.codepipeline_role.id
+  name_prefix = "codepipeline-policy-${var.app_name_prefix}-${terraform.workspace}-"
+  role        = aws_iam_role.codepipeline_role.id
 
   policy = <<EOF
 {
@@ -70,4 +72,11 @@ resource "aws_s3_bucket" "codepipeline_bucket" {
   }
   tags = local.global_tags
 }
-*/
+
+resource "aws_s3_bucket_public_access_block" "codepipeline_bucket" {
+  bucket                  = aws_s3_bucket.codepipeline_bucket.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}

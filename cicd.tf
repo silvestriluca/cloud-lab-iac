@@ -80,3 +80,83 @@ resource "aws_s3_bucket_public_access_block" "codepipeline_bucket" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+################## SSM - PARAMETER STORE ##################
+
+resource "aws_ssm_parameter" "repo_owner" {
+  name      = "/${var.app_name_verbose}/${terraform.workspace}/repo-owner"
+  value     = "placeholder"
+  type      = "SecureString"
+  overwrite = true
+  tags      = local.global_tags
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
+resource "aws_ssm_parameter" "repo_name" {
+  name      = "/${var.app_name_verbose}/${terraform.workspace}/repo-name"
+  value     = "placeholder"
+  type      = "SecureString"
+  overwrite = true
+  tags      = local.global_tags
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
+
+################## CODE-PIPELINE ##################
+
+resource "aws_codepipeline" "codepipeline" {
+  for_each = toset(var.repo_branches)
+
+  name     = "${var.app_name_prefix}-${terraform.workspace}-${each.value}"
+  role_arn = aws_iam_role.codepipeline_role.arn
+
+  artifact_store {
+    location = aws_s3_bucket.codepipeline_bucket.bucket
+    type     = "S3"
+    # Uses standard S3 encryption
+
+  }
+
+  stage {
+    name = "Source"
+
+    action {
+      name             = "Source"
+      category         = "Source"
+      owner            = "ThirdParty"
+      provider         = "GitHub"
+      version          = "1"
+      output_artifacts = [var.app_name_verbose]
+
+      configuration = {
+        Owner  = aws_ssm_parameter.repo_owner.value
+        Repo   = aws_ssm_parameter.repo_name.value
+        Branch = each.value
+      }
+    }
+  }
+
+  stage {
+    name = "Approval"
+
+    action {
+      name     = "Approve"
+      category = "Approval"
+      owner    = "AWS"
+      provider = "Manual"
+      version  = "1"
+
+      configuration = {
+        ProjectName = "test"
+      }
+    }
+  }
+
+  tags = local.global_tags
+}

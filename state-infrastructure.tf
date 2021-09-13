@@ -1,5 +1,5 @@
 locals {
-  state_locking_table = "tf-rstate-lock-bl-${terraform.workspace}"
+  state_locking_table = "tf-rstate-lock-${var.app_name_prefix}-${terraform.workspace}"
 }
 
 

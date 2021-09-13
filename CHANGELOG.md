@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Automated state location awarness
+- CI/CD pipeline in AWS
+
+### Changed
+- Substituted variables for app in prefix/verbose context
 
 ## [0.2.0] - 2021-09-10
 ### Added

@@ -47,6 +47,13 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
     {
       "Effect": "Allow",
       "Action": [
+        "codestar-connections:UseConnection"
+      ],
+      "Resource": "${aws_codestarconnections_connection.source_repo.arn}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
         "codebuild:BatchGetBuilds",
         "codebuild:StartBuild"
       ],
@@ -83,37 +90,20 @@ resource "aws_s3_bucket_public_access_block" "codepipeline_bucket" {
 
 ################## SSM - PARAMETER STORE ##################
 
-resource "aws_ssm_parameter" "repo_owner" {
-  name      = "/${var.app_name_verbose}/${terraform.workspace}/repo-owner"
-  value     = "placeholder"
+resource "aws_ssm_parameter" "repo_id" {
+  name      = "/${var.app_name_verbose}/${terraform.workspace}/repo-id"
+  value     = var.repo_id
   type      = "SecureString"
   overwrite = true
   tags      = local.global_tags
-
-  lifecycle {
-    ignore_changes = [value]
-  }
 }
-
-resource "aws_ssm_parameter" "repo_name" {
-  name      = "/${var.app_name_verbose}/${terraform.workspace}/repo-name"
-  value     = "placeholder"
-  type      = "SecureString"
-  overwrite = true
-  tags      = local.global_tags
-
-  lifecycle {
-    ignore_changes = [value]
-  }
-}
-
 
 ################## CODE-PIPELINE ##################
 
 resource "aws_codepipeline" "codepipeline" {
   for_each = toset(var.repo_branches)
 
-  name     = "${var.app_name_prefix}-${terraform.workspace}-${each.value}"
+  name     = "${var.app_name_prefix}-${terraform.workspace}-${replace(each.value, "/", "_")}"
   role_arn = aws_iam_role.codepipeline_role.arn
 
   artifact_store {
@@ -129,15 +119,16 @@ resource "aws_codepipeline" "codepipeline" {
     action {
       name             = "Source"
       category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
       version          = "1"
-      output_artifacts = [var.app_name_verbose]
+      input_artifacts  = []
+      output_artifacts = ["${var.app_name_verbose}-src-${replace(replace(each.value, "/", "_"), ".", "_")}"]
 
       configuration = {
-        Owner  = aws_ssm_parameter.repo_owner.value
-        Repo   = aws_ssm_parameter.repo_name.value
-        Branch = each.value
+        ConnectionArn    = aws_codestarconnections_connection.source_repo.arn
+        FullRepositoryId = aws_ssm_parameter.repo_id.value
+        BranchName       = each.value
       }
     }
   }
@@ -146,17 +137,26 @@ resource "aws_codepipeline" "codepipeline" {
     name = "Approval"
 
     action {
-      name     = "Approve"
-      category = "Approval"
-      owner    = "AWS"
-      provider = "Manual"
-      version  = "1"
-
+      name             = "Approve"
+      category         = "Approval"
+      owner            = "AWS"
+      provider         = "Manual"
+      version          = "1"
+      input_artifacts  = []
+      output_artifacts = []
       configuration = {
-        ProjectName = "test"
+        CustomData = "Approve IaC changes"
       }
     }
   }
 
   tags = local.global_tags
+}
+
+################## CODESTAR CONNECTION ##################
+
+resource "aws_codestarconnections_connection" "source_repo" {
+  name          = "${var.app_name_verbose}-repo-connection"
+  provider_type = "GitHub"
+  tags          = local.global_tags
 }

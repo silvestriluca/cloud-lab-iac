@@ -12,3 +12,9 @@ variable "repo_branches" {
   type        = list(string)
   description = "List of branches that require CI/CD infrastructure"
 }
+
+variable "repo_id" {
+  type        = string
+  description = "Repository ID (organization/repo-name). Defaults to cloud-lab-iac original repo"
+  default     = "silvestriluca/cloud-lab-iac"
+}

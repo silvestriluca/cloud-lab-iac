@@ -103,7 +103,7 @@ resource "aws_ssm_parameter" "repo_id" {
 resource "aws_codepipeline" "codepipeline" {
   for_each = toset(var.repo_branches)
 
-  name     = "${var.app_name_prefix}-${terraform.workspace}-${replace(each.value, "/", "-")}"
+  name     = "${var.app_name_prefix}-${terraform.workspace}-${each.value == replace(each.value, "feature/", "f_") ? replace(each.value, "release/", "r_") : replace(each.value, "feature/", "f_")}"
   role_arn = aws_iam_role.codepipeline_role.arn
 
   artifact_store {

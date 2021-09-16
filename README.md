@@ -17,3 +17,4 @@ A basic infrastructure for a cloud based lab
 
 ## Uninstall
 - `terraform destroy`
+  

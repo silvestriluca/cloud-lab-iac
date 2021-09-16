@@ -103,7 +103,7 @@ resource "aws_ssm_parameter" "repo_id" {
 resource "aws_codepipeline" "codepipeline" {
   for_each = toset(var.repo_branches)
 
-  name     = "${var.app_name_prefix}-${terraform.workspace}-${replace(each.value, "/", "_")}"
+  name     = "${var.app_name_prefix}-${terraform.workspace}-${replace(each.value, "/", "-")}"
   role_arn = aws_iam_role.codepipeline_role.arn
 
   artifact_store {
@@ -123,7 +123,7 @@ resource "aws_codepipeline" "codepipeline" {
       provider         = "CodeStarSourceConnection"
       version          = "1"
       input_artifacts  = []
-      output_artifacts = ["${var.app_name_verbose}-src-${replace(replace(each.value, "/", "_"), ".", "_")}"]
+      output_artifacts = ["source-code"]
 
       configuration = {
         ConnectionArn    = aws_codestarconnections_connection.source_repo.arn
@@ -132,7 +132,25 @@ resource "aws_codepipeline" "codepipeline" {
       }
     }
   }
+  /*
+  stage {
+    name = "Plan"
 
+    action {
+      name             = "Plan"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["source-code"]
+      output_artifacts = ["plan"]
+      version          = "1"
+
+      configuration = {
+        ProjectName = var.app_name_verbose
+      }
+    }
+  }
+*/
   stage {
     name = "Approval"
 

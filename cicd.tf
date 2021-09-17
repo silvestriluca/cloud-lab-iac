@@ -221,6 +221,11 @@ resource "aws_codepipeline" "codepipeline" {
             type  = "PLAINTEXT"
           },
           {
+            name  = "Commit_Message"
+            value = "#{SourceVariables.CommitMessage}"
+            type  = "PLAINTEXT"
+          },
+          {
             name  = "Phase"
             value = "PLAN"
             type  = "PLAINTEXT"

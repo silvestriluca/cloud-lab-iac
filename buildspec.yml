@@ -1,0 +1,35 @@
+version: 0.2
+        
+phases:
+  install:
+    on-failure: ABORT
+    commands:
+      - echo "Commit hash: ${Commit_ID} : ${Commit_Message}"
+      - echo "Phase: ${Phase}"
+      - echo "Terraform Version:"
+      - terraform --version
+      - echo "Updating environment"
+      - apt-get -y update
+  pre_build:
+    on-failure: ABORT
+    commands:
+      # Restore remote
+      - echo "Restoring remote state..."
+      - mkdir private > /dev/null 2>&1
+      - mkdir private/config > /dev/null 2>&1
+      - echo "Retrieving remote state settings from AWS..."
+      - aws ssm get-parameter --name "/baseline/default/tf-backend-config" --with-decryption | jq -r .Parameter.Value > private/config/backend.cfg
+      - echo "Done"
+      - echo "Setting up remote state..."
+      - cp state-location/state-remote.tf backend.tf
+      - terraform init -backend-config=private/config/backend.cfg
+      - echo "Setting up remote state... Done"
+      - echo "Restoring remote state... Done"
+  build:
+    on-failure: ABORT
+    commands:
+      - echo "Building..."
+  post_build:
+    on-failure: ABORT
+    commands:
+      - echo "Post build phase..."

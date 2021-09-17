@@ -4,7 +4,7 @@ phases:
   install:
     on-failure: ABORT
     commands:
-      - echo "Commit ID - ${Commit_ID}""
+      - echo "Commit ID - ${Commit_ID}"
       - echo "Commit message - ${Commit_Message}"
       - echo "Terraform Version:"
       - terraform --version

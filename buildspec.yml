@@ -10,7 +10,7 @@ phases:
       - terraform --version
       - echo "Updating environment..."
       # Updates packages repositories in image
-      - apk -y update
+      - apk update
       - apk install unzip
       # Install AWS CLI
       - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"

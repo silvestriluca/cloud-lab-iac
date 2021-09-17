@@ -278,13 +278,19 @@ resource "aws_codebuild_project" "terraform_build" {
 
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "hashicorp/terraform:1.0.5"
+    image                       = "aws/codebuild/standard:5.0"
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
 
     environment_variable {
       name  = "WORKSPACE"
       value = terraform.workspace
+    }
+
+    environment_variable {
+      name  = "TF_VERSION"
+      value = aws_ssm_parameter.terraform_version.name
+      type  = "PARAMETER_STORE"
     }
   }
 

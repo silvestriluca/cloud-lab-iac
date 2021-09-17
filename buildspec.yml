@@ -6,16 +6,15 @@ phases:
     commands:
       - echo "Commit ID - ${Commit_ID}"
       - echo "Commit message - ${Commit_Message}"
+      # Updates package repositories in image
+      - apt-get -y -qq update
+      # Installs Terraform
+      - echo "Installing Terraform..."
+      - wget -q https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+      - unzip terraform_${TF_VERSION}_linux_amd64.zip
+      - cp terraform /usr/bin/terraform
       - echo "Terraform Version:"
       - terraform --version
-      - echo "Updating environment..."
-      # Updates packages repositories in image
-      - apk update
-      - apk --no-cache add unzip curl sudo glibc groff less jq
-      # Install AWS CLI
-      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      - unzip awscliv2.zip
-      - sudo ./aws/install
   pre_build:
     on-failure: ABORT
     commands:

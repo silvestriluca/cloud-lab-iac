@@ -122,7 +122,8 @@ resource "aws_iam_role_policy" "codebuild_policy" {
     {
       "Effect":"Allow",
       "Action": [
-        "ssm:GetParameter"
+        "ssm:GetParameter",
+        "ssm:GetParameters"
       ],
       "Resource": [
         "${aws_ssm_parameter.terraform_version.arn}"

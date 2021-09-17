@@ -2,16 +2,16 @@ version: 0.2
         
 phases:
   install:
-    #on-failure: ABORT
+    on-failure: ABORT
     commands:
-      - echo "Commit hash: ${Commit_ID} : ${Commit_Message}"
-      - echo "Phase: ${Phase}"
+      - echo 'Commit ID - ${Commit_ID}'
+      - echo "Commit message - ${Commit_Message}"
       - echo "Terraform Version:"
       - terraform --version
       - echo "Updating environment"
       - apt-get -y update
   pre_build:
-    #on-failure: ABORT
+    on-failure: ABORT
     commands:
       # Restore remote
       - echo "Restoring remote state..."
@@ -26,10 +26,10 @@ phases:
       - echo "Setting up remote state... Done"
       - echo "Restoring remote state... Done"
   build:
-    #on-failure: ABORT
+    on-failure: ABORT
     commands:
       - echo "Building..."
   post_build:
-    #on-failure: ABORT
+    on-failure: ABORT
     commands:
       - echo "Post build phase..."

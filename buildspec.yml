@@ -4,12 +4,18 @@ phases:
   install:
     on-failure: ABORT
     commands:
-      - echo 'Commit ID - ${Commit_ID}'
+      - echo "Commit ID - ${Commit_ID}""
       - echo "Commit message - ${Commit_Message}"
       - echo "Terraform Version:"
       - terraform --version
-      - echo "Updating environment"
-      - apt-get -y update
+      - echo "Updating environment..."
+      # Updates packages repositories in image
+      - apk -y update
+      - apk install unzip
+      # Install AWS CLI
+      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - unzip awscliv2.zip
+      - sudo ./aws/install
   pre_build:
     on-failure: ABORT
     commands:

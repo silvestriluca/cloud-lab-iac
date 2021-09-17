@@ -125,9 +125,9 @@ resource "aws_iam_role_policy" "codebuild_policy" {
         "ssm:GetParameter"
       ],
       "Resource": [
-        "${aws_ssm_parameter.terraform_version.arn}",
+        "${aws_ssm_parameter.terraform_version.arn}"
       ]
-    }   
+    }
   ]
 }
 EOF

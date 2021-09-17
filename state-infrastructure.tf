@@ -77,7 +77,7 @@ resource "aws_ssm_parameter" "tf_backend_config" {
 resource "aws_ssm_parameter" "terraform_version" {
   name      = "/${var.app_name_verbose}/${terraform.workspace}/tfversion"
   value     = "placeholder"
-  type      = "SecureString"
+  type      = "String"
   overwrite = true
   tags      = local.global_tags
 

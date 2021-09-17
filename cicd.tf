@@ -195,10 +195,10 @@ resource "aws_codepipeline" "codepipeline" {
   }
 
   stage {
-    name = "Plan"
+    name = "IaC_Plan_Execution"
 
     action {
-      name             = "Plan"
+      name             = "Terraform_Plan"
       namespace        = "PlanVariables"
       category         = "Build"
       owner            = "AWS"
@@ -219,6 +219,11 @@ resource "aws_codepipeline" "codepipeline" {
             name  = "Commit_ID"
             value = "#{SourceVariables.CommitId}"
             type  = "PLAINTEXT"
+          },
+          {
+            name  = "Phase"
+            value = "PLAN"
+            type  = "PLAINTEXT"
           }
         ])
       }
@@ -226,7 +231,7 @@ resource "aws_codepipeline" "codepipeline" {
   }
 
   stage {
-    name = "Approval"
+    name = "IaC_Plan_Approval"
 
     action {
       name             = "Approve"

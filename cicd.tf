@@ -64,6 +64,52 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
 EOF
 }
 
+resource "aws_iam_role" "codebuild_role" {
+  name_prefix = "codebuild-role-${var.app_name_prefix}-${terraform.workspace}-"
+  description = "Role for ${var.app_name_verbose}-${terraform.workspace} Codebuild projects"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "codebuild.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+  tags               = local.global_tags
+}
+
+resource "aws_iam_role_policy" "codebuild_policy" {
+  name_prefix = "codebuild-policy-${var.app_name_prefix}-${terraform.workspace}-"
+  role        = aws_iam_role.codebuild_role.name
+
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Resource": [
+        "*"
+      ],
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+    }
+  ]
+}
+EOF
+}
+
 ################## S3 (Artifact store) ##################
 
 resource "aws_s3_bucket" "codepipeline_bucket" {
@@ -118,6 +164,7 @@ resource "aws_codepipeline" "codepipeline" {
 
     action {
       name             = "Source"
+      namespace        = "SourceVariables"
       category         = "Source"
       owner            = "AWS"
       provider         = "CodeStarSourceConnection"
@@ -132,12 +179,13 @@ resource "aws_codepipeline" "codepipeline" {
       }
     }
   }
-  /*
+
   stage {
     name = "Plan"
 
     action {
       name             = "Plan"
+      namespace        = "PlanVariables"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
@@ -147,10 +195,22 @@ resource "aws_codepipeline" "codepipeline" {
 
       configuration = {
         ProjectName = var.app_name_verbose
+        EnvironmentVariables = jsonencode([
+          {
+            name  = "Release_ID"
+            value = "#{codepipeline.PipelineExecutionId}"
+            type  = "PLAINTEXT"
+          },
+          {
+            name  = "Commit_ID"
+            value = "#{SourceVariables.CommitId}"
+            type  = "PLAINTEXT"
+          }
+        ])
       }
     }
   }
-*/
+
   stage {
     name = "Approval"
 
@@ -178,3 +238,5 @@ resource "aws_codestarconnections_connection" "source_repo" {
   provider_type = "GitHub"
   tags          = local.global_tags
 }
+
+################## CODE-BUILD ##################

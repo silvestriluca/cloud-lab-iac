@@ -194,7 +194,7 @@ resource "aws_codepipeline" "codepipeline" {
       version          = "1"
 
       configuration = {
-        ProjectName = var.app_name_verbose
+        ProjectName = aws_codebuild_project.terraform_build.name
         EnvironmentVariables = jsonencode([
           {
             name  = "Release_ID"
@@ -240,3 +240,42 @@ resource "aws_codestarconnections_connection" "source_repo" {
 }
 
 ################## CODE-BUILD ##################
+
+resource "aws_codebuild_project" "terraform_build" {
+  name          = "${var.app_name_prefix}-${terraform.workspace}"
+  description   = "${var.app_name_verbose} Terraform Plan/Apply jobs"
+  badge_enabled = false
+  build_timeout = "5"
+  service_role  = aws_iam_role.codebuild_role.arn
+
+  artifacts {
+    type = "CODEPIPELINE"
+  }
+
+  environment {
+    compute_type                = "BUILD_GENERAL1_SMALL"
+    image                       = "hashicorp/terraform:1.0.5"
+    type                        = "LINUX_CONTAINER"
+    image_pull_credentials_type = "CODEBUILD"
+
+    environment_variable {
+      name  = "WORKSPACE"
+      value = terraform.workspace
+    }
+  }
+
+  /*
+  logs_config {
+    cloudwatch_logs {
+      group_name  = "log-group"
+      stream_name = "log-stream"
+    }
+  }
+  */
+
+  source {
+    type = "CODEPIPELINE"
+  }
+
+  tags = local.global_tags
+}

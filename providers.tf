@@ -13,10 +13,10 @@ provider "aws" {
   default_tags {
     tags = {
       environment       = "lab"
-      service           = "baseline-infrastructure"
+      service           = "${var.app_name_verbose}-infrastructure"
       stage             = "seed"
       repository        = "github/cloud-lab-iac"
-      tf-state-location = "local"
+      tf-state-location = local.state_location
       tf-workspace      = terraform.workspace
     }
   }

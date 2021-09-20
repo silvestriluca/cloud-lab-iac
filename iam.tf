@@ -1,6 +1,6 @@
 /*
 resource "aws_iam_role" "baseline_iac_manager" {
-  name_prefix        = "baseline_iac_manager"
+  name_prefix        = "${app_name_verbose}_iac_manager"
   description        = "Role to manage baseline infrastructure with Terraform"
   assume_role_policy = ""
   tags               = local.global_tags

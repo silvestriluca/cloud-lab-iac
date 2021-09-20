@@ -182,7 +182,7 @@ resource "aws_codepipeline" "codepipeline" {
       owner            = "AWS"
       provider         = "CodeBuild"
       input_artifacts  = ["source-code"]
-      output_artifacts = ["plan"]
+      output_artifacts = []
       version          = "1"
 
       configuration = {
@@ -226,6 +226,47 @@ resource "aws_codepipeline" "codepipeline" {
       output_artifacts = []
       configuration = {
         CustomData = "Approve IaC changes"
+      }
+    }
+  }
+
+  stage {
+    name = "IaC_Apply"
+
+    action {
+      name             = "Terraform_Apply"
+      namespace        = "ApplyVariables"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["source-code"]
+      output_artifacts = []
+      version          = "1"
+
+      configuration = {
+        ProjectName = aws_codebuild_project.terraform_build.name
+        EnvironmentVariables = jsonencode([
+          {
+            name  = "Release_ID"
+            value = "#{codepipeline.PipelineExecutionId}"
+            type  = "PLAINTEXT"
+          },
+          {
+            name  = "Commit_ID"
+            value = "#{SourceVariables.CommitId}"
+            type  = "PLAINTEXT"
+          },
+          {
+            name  = "Commit_Message"
+            value = "#{SourceVariables.CommitMessage}"
+            type  = "PLAINTEXT"
+          },
+          {
+            name  = "Phase"
+            value = "APPLY"
+            type  = "PLAINTEXT"
+          }
+        ])
       }
     }
   }

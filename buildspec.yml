@@ -34,13 +34,13 @@ phases:
     on-failure: ABORT
     commands:
       - |
-        if [[$Plan == "PLAN"]]
+        if [[ $Plan == "PLAN" ]]
         then
           echo "Lanunching PLAN..."
           terraform plan -no-color -out=tfplan;
         fi
       - |
-        if [[$Plan == "APPLY"]]
+        if [[ $Plan == "APPLY" ]]
         then
           echo "Building (APPLY)..."
           terraform plan -no-color -out=tfplan && terraform apply -no-color -auto-approve=true tfplan;

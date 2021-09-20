@@ -83,6 +83,12 @@ resource "aws_iam_role" "codebuild_role" {
 }
 EOF
   tags               = local.global_tags
+
+  lifecycle {
+    ignore_changes = [
+      managed_policy_arns,
+    ]
+  }
 }
 
 

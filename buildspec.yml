@@ -33,15 +33,15 @@ phases:
   build:
     on-failure: ABORT
     commands:
-      - echo $Plan
+      - echo $Phase
       - |
-        if expr "${Plan}" : "PLAN" >/dev/null;
+        if expr "${Phase}" : "PLAN" >/dev/null;
         then
           echo "Lanunching PLAN..."
           terraform plan -no-color -out=tfplan;
         fi
       - |
-        if expr "${Plan}" : "APPLY" >/dev/null;
+        if expr "${Phase}" : "APPLY" >/dev/null;
         then
           echo "Building (APPLY)..."
           terraform plan -no-color -out=tfplan && terraform apply -no-color -auto-approve=true tfplan;

@@ -33,8 +33,20 @@ phases:
   build:
     on-failure: ABORT
     commands:
-      - echo "Building..."
+      - |
+        if $Plan == "PLAN"
+        then
+          echo "Lanunching PLAN..."
+          terraform plan -no-color -out=tfplan;
+        fi
+      - |
+        if $Plan == "APPLY"
+        then
+          echo "Building (APPLY)..."
+          terraform plan -no-color -out=tfplan && terraform apply -no-color -auto-approve=true tfplan;
+        fi
   post_build:
     on-failure: ABORT
     commands:
       - echo "Post build phase..."
+      - rm -rf .terraform terraform terraform_${TF_VERSION}_linux_amd64.zip

@@ -1,0 +1,53 @@
+version: 0.2
+        
+phases:
+  install:
+    on-failure: ABORT
+    commands:
+      - echo "Commit ID - ${Commit_ID}"
+      - echo "Commit message - ${Commit_Message}"
+      # Updates package repositories in image
+      - apt-get -y -qq update
+      # Installs Terraform
+      - echo "Installing Terraform..."
+      - wget -q https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+      - unzip terraform_${TF_VERSION}_linux_amd64.zip
+      - cp terraform /usr/bin/terraform
+      - echo "Terraform Version:"
+      - terraform --version
+  pre_build:
+    on-failure: ABORT
+    commands:
+      # Restore remote
+      - echo "Restoring remote state..."
+      - mkdir private > /dev/null 2>&1
+      - mkdir private/config > /dev/null 2>&1
+      - echo "Retrieving remote state settings from AWS..."
+      - aws ssm get-parameter --name "/baseline/default/tf-backend-config" --with-decryption | jq -r .Parameter.Value > private/config/backend.cfg
+      - echo "Done"
+      - echo "Setting up remote state..."
+      - cp state-location/state-remote.tf backend.tf
+      - terraform init -backend-config=private/config/backend.cfg
+      - echo "Setting up remote state... Done"
+      - echo "Restoring remote state... Done"
+  build:
+    on-failure: ABORT
+    commands:
+      - echo $Phase
+      - |
+        if expr "${Phase}" : "PLAN" >/dev/null;
+        then
+          echo "Lanunching PLAN..."
+          terraform plan -no-color -out=tfplan;
+        fi
+      - |
+        if expr "${Phase}" : "APPLY" >/dev/null;
+        then
+          echo "Building (APPLY)..."
+          terraform plan -no-color -out=tfplan && terraform apply -no-color -auto-approve=true tfplan;
+        fi
+  post_build:
+    on-failure: ABORT
+    commands:
+      - echo "Post build phase..."
+      - rm -rf .terraform terraform terraform_${TF_VERSION}_linux_amd64.zip

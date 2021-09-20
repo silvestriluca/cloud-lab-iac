@@ -1,4 +1,4 @@
 echo "Setting God mode"
-./private/script/god.sh
+./private/scripts/god.sh
 echo "Pushing changes"
 git push

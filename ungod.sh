@@ -1,2 +1,2 @@
 echo "Setting Mortal mode"
-./private/script/ungod.sh
+./private/scripts/ungod.sh

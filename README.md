@@ -30,7 +30,7 @@ Once you have Admin capabilities, do what follows:
 
 Now you can use the scripts in the repo directory:
 - `godpush.sh` => Push an updated version of your infrastructure and activates "God mode"
-- `ungod.sh` => Deactivates God mode on all CodeBuild roles you specified in point 5.
+- `ungod.sh` => Deactivates God mode on all CodeBuild roles you specified in point 5. ("Mortal mode")
 
 ## License
 See [License file](./LICENSE)

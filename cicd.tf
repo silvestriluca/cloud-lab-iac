@@ -85,6 +85,9 @@ EOF
   tags               = local.global_tags
 }
 
+
+# Codebuild inline policy
+/*
 resource "aws_iam_role_policy" "codebuild_policy" {
   name_prefix = "codebuild-policy-${var.app_name_prefix}-${terraform.workspace}-"
   role        = aws_iam_role.codebuild_role.name
@@ -93,10 +96,11 @@ resource "aws_iam_role_policy" "codebuild_policy" {
   policy = <<EOF
 {
   "Version": "2012-10-17",
-  "Statement": []
+  "Statement": [{}]
 }
 EOF
 }
+*/
 
 ################## S3 (Artifact store) ##################
 

@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+
+## [0.3.0] - 2021-09-20
+### Added
 - Automated state location awarness
 - CI/CD pipeline in AWS (triggered by Githib events)
 - S3 bucket for CI/CD artifacti

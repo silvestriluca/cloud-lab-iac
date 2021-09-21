@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
+### Removed
+- Removed Commit_Message environment variable on pipeline because of JSON parse issue with some formatted strings
+
 ## [0.3.0] - 2021-09-20
 ### Added
 - Automated state location awarness

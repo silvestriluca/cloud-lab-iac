@@ -5,7 +5,6 @@ phases:
     on-failure: ABORT
     commands:
       - echo "Commit ID - ${Commit_ID}"
-      - echo "Commit message - ${Commit_Message}"
       # Updates package repositories in image
       - apt-get -y -qq update
       # Installs Terraform

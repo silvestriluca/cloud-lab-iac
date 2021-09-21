@@ -40,5 +40,8 @@ Here is an overview of the architecture
 ## Credits
 Thanks to [Takashi Nozawa](https://github.com/nozaq) for its awesome work in [this Terraform module](https://registry.terraform.io/modules/nozaq/remote-state-s3-backend/aws/latest)
 
+## Changelog
+Changelog can be found [here](./CHANGELOG.md)
+
 ## License
 See [License file](./LICENSE)

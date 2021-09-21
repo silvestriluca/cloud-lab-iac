@@ -1,6 +1,6 @@
 locals {
   trail_s3_key_prefix = "cloudtrail"
-  trail_bucket_name   = "${var.app_name_prefix}-${terraform.workspace}-trail"
+  trail_bucket_name   = "${var.app_name_prefix}-${terraform.workspace}-trail-${data.aws_caller_identity.current.account_id}"
 }
 ################## CLOUDTRAIL ##################
 

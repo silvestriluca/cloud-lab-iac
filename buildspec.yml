@@ -17,6 +17,9 @@ phases:
   pre_build:
     on-failure: ABORT
     commands:
+      # Setting workspace
+      - terraform workspace select ${Workspace} || terraform workspace new ${Workspace}
+      - terraform workspace show
       # Restore remote
       - echo "Restoring remote state..."
       - mkdir private > /dev/null 2>&1
@@ -25,7 +28,7 @@ phases:
       - aws ssm get-parameter --name "/baseline/default/tf-backend-config" --with-decryption | jq -r .Parameter.Value > private/config/backend.cfg
       - echo "Done"
       - echo "Setting up remote state..."
-      - cp state-location/state-remote.tf backend.tf
+      - cp state-location/state-remote.tf backend.tf      
       - terraform init -backend-config=private/config/backend.cfg
       - echo "Setting up remote state... Done"
       - echo "Restoring remote state... Done"

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Terraform lock state
+- Workspace awareness in CodeBuild/CodePipeline
 
 ### Removed
 - Removed Commit_Message environment variable on pipeline because of JSON parse issue with some formatted strings

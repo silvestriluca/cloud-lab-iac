@@ -17,9 +17,6 @@ phases:
   pre_build:
     on-failure: ABORT
     commands:
-      # Setting workspace
-      - terraform workspace select ${Workspace} || terraform workspace new ${Workspace}
-      - terraform workspace show
       # Restore remote
       - echo "Restoring remote state..."
       - mkdir private > /dev/null 2>&1
@@ -32,6 +29,11 @@ phases:
       - terraform init -backend-config=private/config/backend.cfg
       - echo "Setting up remote state... Done"
       - echo "Restoring remote state... Done"
+      # Setting workspace
+      - echo "Setting workspace..."
+      - terraform workspace select ${Workspace} || terraform workspace new ${Workspace}
+      - terraform workspace show
+      - echo "Setting workspace...Done"
   build:
     on-failure: ABORT
     commands:

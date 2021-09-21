@@ -18,8 +18,8 @@ phases:
     on-failure: ABORT
     commands:
       # Setting workspace
-      - terraform workspace select ${Workspace} || terraform workspace new ${Workspace}
-      - terraform workspace show
+      #- terraform workspace select ${Workspace} || terraform workspace new ${Workspace}
+      #- terraform workspace show
       # Restore remote
       - echo "Restoring remote state..."
       - mkdir private > /dev/null 2>&1

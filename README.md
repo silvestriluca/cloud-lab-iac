@@ -32,5 +32,13 @@ Now you can use the scripts in the repo directory:
 - `godpush.sh` => Push an updated version of your infrastructure and activates "God mode"
 - `ungod.sh` => Deactivates God mode on all CodeBuild roles you specified in point 5. ("Mortal mode")
 
+## Architecture
+Here is an overview of the architecture
+
+![Architecture](./docs/img/architecture.png)
+
+## Credits
+Thanks to [Takashi Nozawa](https://github.com/nozaq) for its awesome work in [this Terraform module](https://registry.terraform.io/modules/nozaq/remote-state-s3-backend/aws/latest)
+
 ## License
 See [License file](./LICENSE)

@@ -142,6 +142,14 @@ resource "aws_ssm_parameter" "repo_id" {
   tags      = local.global_tags
 }
 
+################## CLOUDWATCH ##################
+
+resource "aws_cloudwatch_log_group" "codebuild" {
+  name              = "/aws/codebuild/${var.app_name_prefix}-${terraform.workspace}"
+  retention_in_days = 0
+  tags              = local.global_tags
+}
+
 ################## CODE-PIPELINE ##################
 
 resource "aws_codepipeline" "codepipeline" {
@@ -319,14 +327,11 @@ resource "aws_codebuild_project" "terraform_build" {
     }
   }
 
-  /*
   logs_config {
     cloudwatch_logs {
-      group_name  = "log-group"
-      stream_name = "log-stream"
+      group_name = aws_cloudwatch_log_group.codebuild.name
     }
   }
-  */
 
   source {
     type = "CODEPIPELINE"

@@ -266,6 +266,11 @@ resource "aws_codepipeline" "codepipeline" {
             name  = "Phase"
             value = "APPLY"
             type  = "PLAINTEXT"
+          },
+          {
+            name  = "Workspace"
+            value = terraform.workspace
+            type  = "PLAINTEXT"
           }
         ])
       }

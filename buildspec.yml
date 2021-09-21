@@ -31,8 +31,8 @@ phases:
       - echo "Restoring remote state... Done"
       # Setting workspace
       - echo "Setting workspace..."
-      - terraform workspace select ${Workspace} || terraform workspace new ${Workspace}
-      - terraform workspace show
+      #- terraform workspace select ${Workspace} || terraform workspace new ${Workspace}
+      #- terraform workspace show
       - echo "Setting workspace...Done"
   build:
     on-failure: ABORT

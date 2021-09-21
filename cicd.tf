@@ -205,13 +205,13 @@ resource "aws_codepipeline" "codepipeline" {
             type  = "PLAINTEXT"
           },
           {
-            name  = "Commit_Message"
-            value = "#{SourceVariables.CommitMessage}"
+            name  = "Phase"
+            value = "PLAN"
             type  = "PLAINTEXT"
           },
           {
-            name  = "Phase"
-            value = "PLAN"
+            name  = "Workspace"
+            value = terraform.workspace
             type  = "PLAINTEXT"
           }
         ])
@@ -263,13 +263,13 @@ resource "aws_codepipeline" "codepipeline" {
             type  = "PLAINTEXT"
           },
           {
-            name  = "Commit_Message"
-            value = "#{SourceVariables.CommitMessage}"
+            name  = "Phase"
+            value = "APPLY"
             type  = "PLAINTEXT"
           },
           {
-            name  = "Phase"
-            value = "APPLY"
+            name  = "Workspace"
+            value = terraform.workspace
             type  = "PLAINTEXT"
           }
         ])

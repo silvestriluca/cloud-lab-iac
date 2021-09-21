@@ -29,7 +29,7 @@ override.tf.json
 # example: *tfplan*
 
 # Ignore terraform.lock.hcl (locked provider version choices)
-.terraform.lock.hcl
+#.terraform.lock.hcl
 
 # Ignored vscode files
 .vscode/

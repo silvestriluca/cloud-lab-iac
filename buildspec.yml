@@ -5,7 +5,6 @@ phases:
     on-failure: ABORT
     commands:
       - echo "Commit ID - ${Commit_ID}"
-      - echo "Commit message - ${Commit_Message}"
       # Updates package repositories in image
       - apt-get -y -qq update
       # Installs Terraform
@@ -26,10 +25,15 @@ phases:
       - aws ssm get-parameter --name "/baseline/default/tf-backend-config" --with-decryption | jq -r .Parameter.Value > private/config/backend.cfg
       - echo "Done"
       - echo "Setting up remote state..."
-      - cp state-location/state-remote.tf backend.tf
+      - cp state-location/state-remote.tf backend.tf      
       - terraform init -backend-config=private/config/backend.cfg
       - echo "Setting up remote state... Done"
       - echo "Restoring remote state... Done"
+      # Setting workspace
+      - echo "Setting workspace..."
+      - terraform workspace select ${Workspace} || terraform workspace new ${Workspace}
+      - terraform workspace show
+      - echo "Setting workspace...Done"
   build:
     on-failure: ABORT
     commands:

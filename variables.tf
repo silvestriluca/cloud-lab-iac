@@ -18,3 +18,9 @@ variable "repo_id" {
   description = "Repository ID (organization/repo-name). Defaults to cloud-lab-iac original repo"
   default     = "silvestriluca/cloud-lab-iac"
 }
+
+variable "dns_hosted_zone" {
+  type        = string
+  description = "The DNS Hosted zone dedicated to the lab"
+  default     = "mylab.example.com"
+}

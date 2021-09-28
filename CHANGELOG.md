@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Default tags for replica region resources
+- Route 53 hosted zone and NS entries for Lab
 
 ## [0.5.0] - 2021-09-21
 ### Added

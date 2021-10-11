@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
+## [0.6.0] - 2021-10-11
+### Added
+- Default tags for replica region resources
+- Route 53 hosted zone and NS entries for Lab
+
 ## [0.5.0] - 2021-09-21
 ### Added
 - Cloudwatch log group for CodeBuild

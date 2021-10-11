@@ -25,4 +25,14 @@ provider "aws" {
 provider "aws" {
   alias  = "replica"
   region = "eu-central-1"
+  default_tags {
+    tags = {
+      environment       = "lab"
+      service           = "${var.app_name_verbose}-infrastructure"
+      stage             = "seed"
+      repository        = "github/cloud-lab-iac"
+      tf-state-location = local.state_location
+      tf-workspace      = terraform.workspace
+    }
+  }
 }

@@ -34,6 +34,10 @@ phases:
       - terraform workspace select ${Workspace} || terraform workspace new ${Workspace}
       - terraform workspace show
       - echo "Setting workspace...Done"
+      # Retrieving zone configuration
+      - export DNS_HOSTED_ZONE_SSM_PS_VALUE=$(aws ssm get-parameter --name "/baseline/default/lab-subdomain" --with-decryption | jq -r .Parameter.Value)
+      - export TF_VAR_dns_hosted_zone=${DNS_HOSTED_ZONE_SSM_PS_VALUE:-mylab.example.com} 
+
   build:
     on-failure: ABORT
     commands:

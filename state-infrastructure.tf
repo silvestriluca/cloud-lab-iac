@@ -45,7 +45,7 @@ resource "aws_ssm_parameter" "state_bucket" {
 
 resource "aws_ssm_parameter" "state_bucket_replica" {
   name      = "/${var.app_name_verbose}/${terraform.workspace}/state-bucket-replica-name"
-  value     = module.s3_remote_state.replica_bucket.bucket
+  value     = module.s3_remote_state.replica_bucket[0].bucket
   type      = "SecureString"
   overwrite = true
   tags      = local.global_tags

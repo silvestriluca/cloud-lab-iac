@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
+## [0.6.1] - 2021-10-11
+### Added
+- None
 ### Changed
 - Upgraded TF AWS provider to 3.62.0
 - Fixed compatibility with ` nozaq/terraform-aws-remote-state-s3-backend` v0.7.0
